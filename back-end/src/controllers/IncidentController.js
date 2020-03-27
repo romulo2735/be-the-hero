@@ -39,7 +39,8 @@ module.exports = {
     const { id } = request.params;
     const ong_id = request.headers.authorization;
 
-    const incident = await connection('incidents').where('id', id).select('ong_id').first();
+    const incident = await connection('incidents')
+        .where('id', id).select('ong_id').first();
 
     if (incident.ong_id !== ong_id) {
       return response.status(401).json({ error: 'operation not permitted.' });
@@ -47,7 +48,7 @@ module.exports = {
 
     await connection('incidents').where('id', id).delete();
 
-    return response().status(204).send();
+    return response.status(204).send();
   },
 
 };
