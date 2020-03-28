@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View, Linking} from 'react-native';
+import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import * as MailComposer from 'expo-mail-composer';
 
 import styles from "./styles";
@@ -9,22 +9,26 @@ import logo from "../../assets/logo.png";
 
 export default function Detail() {
     const navigation = useNavigation();
-    const message = 'Olá, estou entrando em contato com o caso de Lorem Ipsum.';
+    const route = useRoute();
+
+    const incident = route.params.incident;
+    const value = Intl.NumberFormat('pt-BR', {style: 'currency',currency: 'BRL'}).format(incident.value);
 
     function navigateBack() {
         navigation.goBack();
     }
 
-    function sendEmail(){
+    function sendEmail() {
         MailComposer.composeAsync({
-            subject: 'Herói do caso: Lorem Ipsum',
-            recipients: ['romulosousa27@hotmail.com'],
-            body: message,
+            subject: `Herói do caso: ${incident.title}`,
+            recipients: [incident.email],
+            body: `Olá ${incident.name}, estou entrando em contato com o caso ${incident.title} com o valor: ${value}`,
         });
     }
 
     function sendWhastapp() {
         Linking.openURL(`https://api.whatsapp.com/send?phone=15855721186&text=${message}`);
+        // Linking.openURL(`https://api.whatsapp.com/send?phone=${incident.whatsapp}text=${message}`);
     }
 
     return (
@@ -38,13 +42,20 @@ export default function Detail() {
 
             <View style={styles.incident}>
                 <Text style={[styles.indentProperty, {marginTop: 0}]}>ONG:</Text>
-                <Text style={styles.incidentValue}>APAD</Text>
+                <Text style={styles.incidentValue}>{incident.name} de {incident.city}/{incident.UF}</Text>
 
                 <Text style={styles.indentProperty}>CASO: </Text>
-                <Text style={styles.incidentValue}>LOREM IPSUM</Text>
+                <Text style={styles.incidentValue}>{incident.description}</Text>
 
                 <Text style={styles.indentProperty}>VALOR: </Text>
-                <Text style={styles.incidentValue}>R$ 120,00</Text>
+                <Text style={styles.incidentValue}>
+                    {
+                        Intl.NumberFormat('pt-BR', {
+                            style: 'currenct',
+                            currency: 'BRL'
+                        }).format(incident.value)
+                    }
+                </Text>
             </View>
 
             <View style={styles.contactBox}>
@@ -53,7 +64,8 @@ export default function Detail() {
 
                 <Text style={styles.heroDescription}>Entre em contato:</Text>
 
-                <View style={styles.actions} onPress={() => {}}>
+                <View style={styles.actions} onPress={() => {
+                }}>
                     <TouchableOpacity style={styles.action} onPress={sendWhastapp}>
                         <Text style={styles.actionText}>Whatsapp</Text>
                     </TouchableOpacity>
