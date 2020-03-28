@@ -13,6 +13,7 @@ export default function Detail() {
 
     const incident = route.params.incident;
     const value = Intl.NumberFormat('pt-BR', {style: 'currency',currency: 'BRL'}).format(incident.value);
+    const message = `Olá ${incident.name}, estou entrando em contato com o caso ${incident.title} com o valor: ${value}`;
 
     function navigateBack() {
         navigation.goBack();
@@ -22,12 +23,12 @@ export default function Detail() {
         MailComposer.composeAsync({
             subject: `Herói do caso: ${incident.title}`,
             recipients: [incident.email],
-            body: `Olá ${incident.name}, estou entrando em contato com o caso ${incident.title} com o valor: ${value}`,
+            body: message,
         });
     }
 
     function sendWhastapp() {
-        Linking.openURL(`https://api.whatsapp.com/send?phone=15855721186&text=${message}`);
+        Linking.openURL(`https://api.whatsapp.com/send?phone=5585987517074&text=${message}`);
         // Linking.openURL(`https://api.whatsapp.com/send?phone=${incident.whatsapp}text=${message}`);
     }
 
@@ -51,7 +52,7 @@ export default function Detail() {
                 <Text style={styles.incidentValue}>
                     {
                         Intl.NumberFormat('pt-BR', {
-                            style: 'currenct',
+                            style: 'currency',
                             currency: 'BRL'
                         }).format(incident.value)
                     }
